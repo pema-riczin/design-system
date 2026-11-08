@@ -17,6 +17,10 @@ runs:
   steps:
     - name: Send Slack Notifications
       id: send-slack-notification
+      env:
+        SLACK_TITLE: ${{ inputs.slack-title }}
+        SLACK_BODY: ${{ inputs.slack-body }}
+        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
       run: |
         echo "Slack notification sent to #broadcast-design-system-releases"
         curl -X POST -H 'Content-type: application/json' \
@@ -26,7 +30,7 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ inputs.slack-title }}"
+                  "text": "'"$SLACK_TITLE"'"
                 }
               },
               {
@@ -36,8 +40,8 @@ runs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ inputs.slack-body }}"
+                  "text": "'"$SLACK_BODY"'"
                 }
               }
-            ]}' ${{ inputs.slack-webhook-url }}
+            ]}' "$SLACK_WEBHOOK_URL"
       shell: bash
